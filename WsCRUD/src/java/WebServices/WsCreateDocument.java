@@ -16,6 +16,8 @@ import java.util.Map;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.ItemIterable;
+import java.util.List;
+import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
@@ -51,7 +53,7 @@ import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamHashI
         Session session = factory.createSession(parameters);*/
 
 
-@WebService(serviceName = "WsCreateDocument")
+@WebService(serviceName = "WsCreateDocument?")
 public class WsCreateDocument {
 
 
@@ -70,20 +72,14 @@ public class WsCreateDocument {
         parameters.put(SessionParameter.PASSWORD, "admin");
 
         // connection settings
-        parameters.put(SessionParameter.BINDING_TYPE, BindingType.WEBSERVICES.value());
-        parameters.put(SessionParameter.WEBSERVICES_ACL_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/ACLService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_DISCOVERY_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/DiscoveryService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_MULTIFILING_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/MultiFilingService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_NAVIGATION_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/NavigationService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_OBJECT_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/ObjectService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_POLICY_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/PolicyService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_RELATIONSHIP_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/RelationshipService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_REPOSITORY_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/RepositoryService?wsdl");
-        parameters.put(SessionParameter.WEBSERVICES_VERSIONING_SERVICE, "http://142.93.83.23:8080/alfresco/cmisws/VersioningService?wsdl");
-        parameters.put(SessionParameter.REPOSITORY_ID, "5ed242a5-bed5-4369-a717-bdb9b56d99ec");
+        parameters.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
+        parameters.put(SessionParameter.ATOMPUB_URL, "http://142.93.83.23:8080/alfresco/api/-default-/public/cmis/versions/1.1/atom");
+        //parameters.put(SessionParameter.REPOSITORY_ID, "5ed242a5-bed5-4369-a717-bdb9b56d99ec");
 
         // create session
-        Session session = factory.createSession(parameters);
+        List<Repository> repositories = factory.getRepositories(parameters);
+        Session session = repositories.get(0).createSession();
+        //Session session = factory.createSession(parameters);
         Folder root = session.getRootFolder();
         System.out.println("Creating 'ADGNewFolder' in the root folder");
         /*Creamos nuestra variable tipo Map que recibe por atributos 2 strings.*/
